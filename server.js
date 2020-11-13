@@ -38,10 +38,34 @@ function start() {
                 "View All Employees.",
                 "View All Employees by Department.",
                 "View All Employees by Manager.",
-                "Add Employee",
-                "Remove Employee",
-                "Update Employee Role",
-                "Update Employee Manager",
+                "Add Employee.",
+                "Remove Employee.",
+                "Update Employee Role.",
+                "Update Employee Manager.",
             ]
-        });
-}
+        })
+        .then(function (answer) {
+            if (answer.initialPrompt === "View All Employees.") {
+                viewEmployees();
+            }
+            else if (answer.initialPrompt === "View All Employees by Department.") {
+                viewEmployeesDept();
+            }
+            else if (answer.initialPrompt === "View All Employees by Manager.") {
+                viewEmployeesManager();
+            }
+            else if (answer.initialPrompt === "Add Employee.") {
+                addEmployee();
+            }
+            else if (answer.initialPrompt === "Remove Employee.") {
+                removeEmployee();
+            }
+            else if (answer.initialPrompt === "Update Employee Role.") {
+                updateRole();
+            }
+            else if (answer.initialPrompt === "Update Employee Manager.") {
+                updateManager();
+            }
+        })
+};
+
