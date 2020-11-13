@@ -66,6 +66,64 @@ function start() {
             else if (answer.initialPrompt === "Update Employee Manager.") {
                 updateManager();
             }
-        })
+        });
 };
 
+function viewEmployees() {
+
+};
+
+function viewEmployeesDept() {
+
+};
+
+function viewEmployeesManager() {
+
+};
+
+function addEmployee() {
+    inquirer.prompt([
+        {
+            name: "firstName",
+            type: "input",
+            message: "What is the new Employee's first name?"
+        },
+        {
+            name: "lastName",
+            type: "input",
+            message: "What is the new Employee's last name?"
+        },
+        {
+            name: "newEmpRole",
+            type: "list",
+            message: "What is the new Employee's role?",
+            choices: [
+                "Sales Lead",
+                "Salesperson",
+                "Lead Engineer",
+                "Software Engineer",
+                "Account Manager",
+                "Accountant",
+                "Legal Team Lead",
+            ]
+        },
+        {
+            name: "newEmpRole",
+            type: "list",
+            message: "What is the new Employee's role?",
+            choices: [""],
+        },
+    ])
+};
+
+function removeEmployee() {
+
+};
+
+function updateRole() {
+
+};
+
+function updateManager() {
+
+};
