@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var consoleTable = require("console.table");
+require("dotenv").config();
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -13,7 +14,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: process.env.dbpassword,
+    password: process.env.DB_PWD,
     database: "employeeDB"
 });
 
@@ -67,7 +68,13 @@ function start() {
 
 function viewEmployees() {
     //call the query to select the join that we created
-    //connection.query pass it in, and it will send back an array of all of the results
+    connection.query(`SELECT first_name, last_name, title, salary, department_name
+    FROM employee
+    LEFT JOIN roles ON employee.role_id = roles.id
+    LEFT JOIN department ON roles.department_id = department.id`, function (err, results) {
+        if (err) throw err;
+        console.log(results);
+    });
     //the results objects will go into console.table and it will display in a table view
 };
 
@@ -108,10 +115,26 @@ function addEmployee() {
         {
             name: "newEmpRole",
             type: "list",
-            message: "What is the new Employee's role?",
+            message: "What is the new Employee's Manager?",
+            //how do i populate the list of managers from the db?
+            //need connection.query and select all of the managers, then pass in the options using a for loop
             choices: [""],
         },
-    ])
+    ]).then(answers => {
+        connection.query("INSERT INTO employee SET ?",
+            {
+                first_name: answers.firstName,
+                last_name: answers.lastName,
+                role_id: answers.newEmpRole,
+                manager_id: answers.
+        },
+            (err, results) => {
+                if (err) throw err;
+
+            });
+    });
+    //first is error object, second is the data object
+
 };
 
 function removeEmployee() {
