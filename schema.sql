@@ -21,3 +21,8 @@ CREATE TABLE employee (
     role_id INT NOT NULL,
     manager_id INT NOT NULL,
 )
+
+SELECT first_name, last_name, title, salary, department_name
+FROM employee
+LEFT JOIN roles ON employee.role_id = roles.id
+LEFT JOIN department ON roles.department_id = department.id
