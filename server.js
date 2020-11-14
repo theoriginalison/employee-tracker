@@ -2,10 +2,6 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var consoleTable = require("console.table");
 
-// do I need this for Heroku?
-// var PORT = process.env.PORT || 8080;
-
-
 // create the connection information for the sql database
 var connection = mysql.createConnection({
     host: "localhost",
@@ -18,7 +14,7 @@ var connection = mysql.createConnection({
 
     // Your password
     password: "",
-    database: "greatBay_DB"
+    database: "employeeDB"
 });
 
 // connect to the mysql server and sql database
