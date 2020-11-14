@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "",
+    password: process.env.dbpassword,
     database: "employeeDB"
 });
 
@@ -66,7 +66,9 @@ function start() {
 };
 
 function viewEmployees() {
-
+    //call the query to select the join that we created
+    //connection.query pass it in, and it will send back an array of all of the results
+    //the results objects will go into console.table and it will display in a table view
 };
 
 function viewEmployeesDept() {
