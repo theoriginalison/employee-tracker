@@ -1,3 +1,5 @@
+//TODO: View departments, view roles, then add employee, then add departments, then add roles, THEN update employee roles
+
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var consoleTable = require("console.table");
@@ -68,12 +70,14 @@ function start() {
 
 function viewEmployees() {
     //call the query to select the join that we created
-    connection.query(`SELECT first_name, last_name, title, salary, department_name
+    connection.query(`SELECT first_name as "First Name", last_name as "Last Name", title as "Title", salary as "Salary", department_name as "Department Name"
     FROM employee
     LEFT JOIN roles ON employee.role_id = roles.id
     LEFT JOIN department ON roles.department_id = department.id`, function (err, results) {
         if (err) throw err;
-        console.log(results);
+        console.table(results);
+        //THIS NEEDS TO BE AT THE END OF EVERY FUNCTION!!
+        start();
     });
     //the results objects will go into console.table and it will display in a table view
 };
@@ -113,11 +117,12 @@ function addEmployee() {
             ]
         },
         {
-            name: "newEmpRole",
+            name: "newEmpManager",
             type: "list",
             message: "What is the new Employee's Manager?",
             //how do i populate the list of managers from the db?
             //need connection.query and select all of the managers, then pass in the options using a for loop
+            //do this LAST-- it's a bonus piece
             choices: [""],
         },
     ]).then(answers => {
@@ -126,8 +131,8 @@ function addEmployee() {
                 first_name: answers.firstName,
                 last_name: answers.lastName,
                 role_id: answers.newEmpRole,
-                manager_id: answers.
-        },
+                manager_id: answers.newEmpManager,
+            },
             (err, results) => {
                 if (err) throw err;
 
