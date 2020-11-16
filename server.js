@@ -85,10 +85,9 @@ function viewEmployees() {
 //START HERE AND FIXING THE JOINS!!
 function viewEmployeesDept() {
     connection.query(`SELECT department_name as "Department Name", title as "Title", first_name as "First Name", last_name as "Last Name"
-    FROM department
-
-    LEFT JOIN roles ON employee.role_id = roles.id
-    LEFT JOIN department ON roles.department_id = department.id`, function (err, results) {
+    FROM roles
+    LEFT JOIN department ON roles.department_id = department.id
+    LEFT JOIN employee ON role.id = employee.role_id`, function (err, results) {
         if (err) throw err;
         console.table(results);
         start();
