@@ -36,7 +36,6 @@ function start() {
             choices: [
                 "View All Employees.",
                 "View All Employees by Department.",
-                "View All Employees by Manager.",
                 "Add Employee.",
                 "Remove Employee.",
                 "Update Employee Role.",
@@ -179,10 +178,17 @@ function removeEmployee() {
             message: "What is the ID of the employee you'd like to remove?"
         }],
     ).then(answers => {
-        connection.query("DELETE FROM employee  ")
+        connection.query("DELETE FROM employee WHERE ?",
+            {
+                id: answers.removeEmp
+            },
+            (err, results) => {
+                if (err) throw err;
+                console.log(`Employee removed.`)
+                start();
+            }
+        )
     })
-
-
 };
 
 function updateRole() {
