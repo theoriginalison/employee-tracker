@@ -40,7 +40,6 @@ function start() {
                 "Add Employee.",
                 "Remove Employee.",
                 "Update Employee Role.",
-                "Update Employee Manager.",
             ]
         })
         .then(function (answer) {
@@ -50,9 +49,6 @@ function start() {
             else if (answer.initialPrompt === "View All Employees by Department.") {
                 viewEmployeesDept();
             }
-            else if (answer.initialPrompt === "View All Employees by Manager.") {
-                viewEmployeesManager();
-            }
             else if (answer.initialPrompt === "Add Employee.") {
                 addEmployee();
             }
@@ -61,9 +57,6 @@ function start() {
             }
             else if (answer.initialPrompt === "Update Employee Role.") {
                 updateRole();
-            }
-            else if (answer.initialPrompt === "Update Employee Manager.") {
-                updateManager();
             }
         });
 };
@@ -82,20 +75,28 @@ function viewEmployees() {
     //the results objects will go into console.table and it will display in a table view
 };
 
-//START HERE AND FIXING THE JOINS!!
+//This just has two NULLs for the left and right join; need full join
 function viewEmployeesDept() {
-    connection.query(`SELECT department_name as "Department Name", title as "Title", first_name as "First Name", last_name as "Last Name"
-    FROM department
-    LEFT JOIN roles ON department.department_name = roles.department_id
-    LEFT JOIN employee ON roles.title = employee.role_id`, function (err, results) {
-        if (err) throw err;
-        console.table(results);
-        start();
-    })
-};
-
-function viewEmployeesManager() {
-
+    connection.query(
+        //     `SELECT department_name as "Department Name", title as "Title", first_name as "First Name", last_name as "Last Name"
+        // FROM department
+        // LEFT JOIN roles ON department.id = roles.department_id
+        // LEFT JOIN employee ON roles.title = employee.role_id
+        // UNION ALL
+        // SELECT department_name as "Department Name", title as "Title", first_name as "First Name", last_name as "Last Name"
+        // FROM department
+        // RIGHT JOIN roles ON department.id = roles.department_id
+        // RIGHT JOIN employee ON roles.title = employee.role_id;`
+        `SELECT department_name as "Department Name", title as "Title", first_name as "First Name", last_name as "Last Name"
+FROM employee
+LEFT JOIN roles ON employee.role_id = roles.id
+LEFT JOIN department ON roles.department_id = department.id
+ORDER BY department_name, title, first_name, last_name;`
+        , function (err, results) {
+            if (err) throw err;
+            console.table(results);
+            start();
+        })
 };
 
 function addEmployee() {
@@ -123,17 +124,9 @@ function addEmployee() {
                 "Accountant",
                 "Legal Team Lead",
             ]
-        },
-        {
-            name: "newEmpManager",
-            type: "list",
-            message: "What is the new Employee's Manager?",
-            //how do i populate the list of managers from the db?
-            //need connection.query and select all of the managers, then pass in the options using a for loop
-            //do this LAST-- it's a bonus piece
-            choices: [""],
-        },
-    ]).then(answers => {
+        }
+    ],
+    ).then(answers => {
         connection.query("INSERT INTO employee SET ?",
             {
                 first_name: answers.firstName,
@@ -155,9 +148,5 @@ function removeEmployee() {
 };
 
 function updateRole() {
-
-};
-
-function updateManager() {
 
 };
