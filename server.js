@@ -100,6 +100,43 @@ ORDER BY department_name, title, first_name, last_name;`
 };
 
 function addEmployee() {
+    var empRoleChoices = [
+        {
+            name: "Sales Lead",
+            value: 1
+
+        },
+        {
+            name: "Sales Person",
+            value: 2
+
+        },
+        {
+            name: "Lead Engineer",
+            value: 3
+
+        },
+        {
+            name: "Software Engineer",
+            value: 4
+
+        },
+        {
+            name: "Legal Team Lead",
+            value: 5
+
+        },
+        {
+            name: "Lawyer",
+            value: 6
+
+        },
+        {
+            name: "Accountant",
+            value: 7
+
+        },
+    ];
     inquirer.prompt([
         {
             name: "firstName",
@@ -115,15 +152,7 @@ function addEmployee() {
             name: "newEmpRole",
             type: "list",
             message: "What is the new Employee's role?",
-            choices: [
-                "Sales Lead",
-                "Salesperson",
-                "Lead Engineer",
-                "Software Engineer",
-                "Account Manager",
-                "Accountant",
-                "Legal Team Lead",
-            ]
+            choices: empRoleChoices
         }
     ],
     ).then(answers => {
@@ -132,18 +161,27 @@ function addEmployee() {
                 first_name: answers.firstName,
                 last_name: answers.lastName,
                 role_id: answers.newEmpRole,
-                manager_id: answers.newEmpManager,
             },
             (err, results) => {
                 if (err) throw err;
-
+                console.log(`Employee ${answers.firstName} ${answers.lastName} added.`)
+                start();
             });
     });
-    //first is error object, second is the data object
 
 };
 
 function removeEmployee() {
+    inquirer.prompt([
+        {
+            name: "removeEmp",
+            type: "input",
+            message: "What is the ID of the employee you'd like to remove?"
+        }],
+    ).then(answers => {
+        connection.query("DELETE FROM employee  ")
+    })
+
 
 };
 
