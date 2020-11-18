@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var consoleTable = require("console.table");
+const { allowedNodeEnvironmentFlags } = require("process");
 require("dotenv").config();
 
 // create the connection information for the sql database
@@ -98,6 +99,12 @@ function start() {
             }
             else if (answer.initialPrompt === "Update Employee Role.") {
                 updateRole();
+            }
+            else if (answer.initialPrompt === "Add Department.") {
+                addDept();
+            }
+            else if (answer.initialPrompt === "Add Employee Role.") {
+                addRole();
             }
         });
 };
@@ -234,3 +241,59 @@ function updateRole() {
         })
 
 };
+
+function addDept() {
+    inquirer.prompt([
+        {
+            name: "newDeptName",
+            type: "input",
+            message: "What's the name of the department you'd like to add?"
+        }
+    ])
+        .then(answer => {
+            connection.query("INSERT INTO department SET ?",
+                {
+                    department_name: answer.newDeptName
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log(`The ${answer.newDeptName} Department was created successfully!`);
+                    start();
+                }
+            )
+        })
+}
+
+
+
+// function addDept() {
+//     inquirer.prompt([
+//         {
+//             name: "newDeptName",
+//             type: "input",
+//             message: "What's the name of the department you'd like to add?"
+//         }
+//     ])
+//         .then(answer => {
+//             connection.query("INSERT INTO department SET ?",
+//             {
+//                 department_name: answer.newDeptName
+//             },
+//             function(err) {
+//                 if (err) throw err;
+//                 console.log(`The ${answer.newDeptName} Department was created successfully!`);
+//                 start();
+//               }
+//             )
+//         })
+// }
+
+// .then(answer => {
+//     connection.query("INSERT INTO roles SET ?",
+//     {
+//         title: answer.new
+//         salary:
+//         department_id:
+
+//     })
+// })
