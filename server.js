@@ -72,9 +72,12 @@ function start() {
             choices: [
                 "View All Employees.",
                 "View All Employees by Department.",
+                "View All Employees by Role.",
                 "Add Employee.",
                 "Remove Employee.",
                 "Update Employee Role.",
+                "Add Department.",
+                "Add Employee Role."
             ]
         })
         .then(function (answer) {
@@ -83,6 +86,9 @@ function start() {
             }
             else if (answer.initialPrompt === "View All Employees by Department.") {
                 viewEmployeesDept();
+            }
+            else if (answer.initialPrompt === "View All Employees by Role.") {
+                viewEmployeesRole();
             }
             else if (answer.initialPrompt === "Add Employee.") {
                 addEmployee();
@@ -98,7 +104,7 @@ function start() {
 
 function viewEmployees() {
     //call the query to select the join that we created
-    connection.query(`SELECT first_name as "First Name", last_name as "Last Name", title as "Title", salary as "Salary", department_name as "Department Name"
+    connection.query(`SELECT first_name as "First Name", last_name as "Last Name", title as "Role", salary as "Salary", department_name as "Department Name"
     FROM employee
     LEFT JOIN roles ON employee.role_id = roles.id
     LEFT JOIN department ON roles.department_id = department.id`, function (err, results) {
@@ -110,19 +116,9 @@ function viewEmployees() {
     //the results objects will go into console.table and it will display in a table view
 };
 
-//This just has two NULLs for the left and right join; need full join
 function viewEmployeesDept() {
     connection.query(
-        //     `SELECT department_name as "Department Name", title as "Title", first_name as "First Name", last_name as "Last Name"
-        // FROM department
-        // LEFT JOIN roles ON department.id = roles.department_id
-        // LEFT JOIN employee ON roles.title = employee.role_id
-        // UNION ALL
-        // SELECT department_name as "Department Name", title as "Title", first_name as "First Name", last_name as "Last Name"
-        // FROM department
-        // RIGHT JOIN roles ON department.id = roles.department_id
-        // RIGHT JOIN employee ON roles.title = employee.role_id;`
-        `SELECT department_name as "Department Name", title as "Title", first_name as "First Name", last_name as "Last Name"
+        `SELECT department_name as "Department Name", title as "Role", first_name as "First Name", last_name as "Last Name"
 FROM employee
 LEFT JOIN roles ON employee.role_id = roles.id
 LEFT JOIN department ON roles.department_id = department.id
@@ -133,6 +129,21 @@ ORDER BY department_name, title, first_name, last_name;`
             start();
         })
 };
+
+function viewEmployeesRole() {
+    connection.query(
+        `SELECT title as "Role", department_name as "Department Name", first_name as "First Name", last_name as "Last Name"
+FROM employee
+LEFT JOIN roles ON employee.role_id = roles.id
+LEFT JOIN department ON roles.department_id = department.id
+ORDER BY department_name, title, first_name, last_name;`
+        , function (err, results) {
+            if (err) throw err;
+            console.table(results);
+            start();
+        })
+};
+
 
 function addEmployee() {
     inquirer.prompt([
