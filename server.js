@@ -209,8 +209,16 @@ function updateRole() {
                 [
                     {
                         role_id: answer.updateEmpRole
+                    },
+                    {
+                        id: answer.updateEmpId
                     }
                 ],
+                function (error) {
+                    if (error) throw err;
+                    console.log("Employee role updated!");
+                    start();
+                }
             )
         })
 
