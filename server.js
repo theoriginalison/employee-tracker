@@ -1,5 +1,3 @@
-//TODO: View departments, view roles, then add employee, then add departments, then add roles, THEN update employee roles
-
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var consoleTable = require("console.table");
@@ -26,6 +24,44 @@ connection.connect(function (err) {
     // run the start function after the connection is made to prompt the user
     start();
 });
+
+var empRoleChoices = [
+    {
+        name: "Sales Lead",
+        value: 1
+
+    },
+    {
+        name: "Sales Person",
+        value: 2
+
+    },
+    {
+        name: "Lead Engineer",
+        value: 3
+
+    },
+    {
+        name: "Software Engineer",
+        value: 4
+
+    },
+    {
+        name: "Legal Team Lead",
+        value: 5
+
+    },
+    {
+        name: "Lawyer",
+        value: 6
+
+    },
+    {
+        name: "Accountant",
+        value: 7
+
+    },
+];
 
 function start() {
     inquirer
@@ -99,43 +135,6 @@ ORDER BY department_name, title, first_name, last_name;`
 };
 
 function addEmployee() {
-    var empRoleChoices = [
-        {
-            name: "Sales Lead",
-            value: 1
-
-        },
-        {
-            name: "Sales Person",
-            value: 2
-
-        },
-        {
-            name: "Lead Engineer",
-            value: 3
-
-        },
-        {
-            name: "Software Engineer",
-            value: 4
-
-        },
-        {
-            name: "Legal Team Lead",
-            value: 5
-
-        },
-        {
-            name: "Lawyer",
-            value: 6
-
-        },
-        {
-            name: "Accountant",
-            value: 7
-
-        },
-    ];
     inquirer.prompt([
         {
             name: "firstName",
@@ -192,5 +191,27 @@ function removeEmployee() {
 };
 
 function updateRole() {
+    inquirer.prompt([
+        {
+            name: "updateEmpId",
+            type: "input",
+            message: "What is the ID of the employee you'd like to update?"
+        },
+        {
+            name: "updateEmpRole",
+            type: "list",
+            message: "What is their new role?",
+            choices: empRoleChoices
+        },
+    ])
+        .then(answer => {
+            connection.query("UPDATE employee SET ? WHERE ?",
+                [
+                    {
+                        role_id: answer.updateEmpRole
+                    }
+                ],
+            )
+        })
 
 };
