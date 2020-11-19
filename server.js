@@ -26,6 +26,25 @@ connection.connect(function (err) {
     start();
 });
 
+var deptChoices = [
+    {
+        name: "Sales",
+        value: 1
+    },
+    {
+        name: "Engineering",
+        value: 2
+    },
+    {
+        name: "Finance",
+        value: 3
+    },
+    {
+        name: "Legal",
+        value: 4
+    },
+];
+
 var empRoleChoices = [
     {
         name: "Sales Lead",
@@ -264,36 +283,38 @@ function addDept() {
         })
 }
 
+function addRole() {
+    inquirer.prompt([
+        {
+            name: "newRoleName",
+            type: "input",
+            message: "What's the name of the role you'd like to add?"
+        },
+        {
+            name: "newRoleDept",
+            type: "list",
+            message: "What department will this role be in?",
+            choices: deptChoices
+        },
+        {
+            name: "newRoleSalary",
+            type: "input",
+            message: "What's the salary of this role?"
+        },
+    ])
+        .then(answer => {
+            connection.query("INSERT INTO roles SET ?",
+                {
+                    title: answer.newRoleName,
+                    department_id: answer.newRoleDept,
+                    salary: answer.newRoleSalary,
 
-
-// function addDept() {
-//     inquirer.prompt([
-//         {
-//             name: "newDeptName",
-//             type: "input",
-//             message: "What's the name of the department you'd like to add?"
-//         }
-//     ])
-//         .then(answer => {
-//             connection.query("INSERT INTO department SET ?",
-//             {
-//                 department_name: answer.newDeptName
-//             },
-//             function(err) {
-//                 if (err) throw err;
-//                 console.log(`The ${answer.newDeptName} Department was created successfully!`);
-//                 start();
-//               }
-//             )
-//         })
-// }
-
-// .then(answer => {
-//     connection.query("INSERT INTO roles SET ?",
-//     {
-//         title: answer.new
-//         salary:
-//         department_id:
-
-//     })
-// })
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log(`The ${answer.newDeptName} Department was created successfully!`);
+                    start();
+                }
+            )
+        })
+}
