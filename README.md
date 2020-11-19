@@ -19,10 +19,10 @@ Install npm packages, including inquirer mysql, and console table.
 ## Usage
 After opening the app, select the feature you'd like to use: add/view departments, roles, & employees, or update employee roles. A new employee can also be created, and employees can be deleted.
 
-## Screeshot
-![Screenshot of start page](./utils/start-page.png)
-![Screenshot of blank notes entry page](./utils/blank-notes-page.png)
-![Screenshot of saved and written note](./utils/saved-notes-page.png)
+## Screeshots
+![Screenshot of inquirer prompts](./utils/start-app.png)
+![Screenshot of view employees](./utils/view-employees.png)
+![Screenshot of add employee prompts with new employee](./utils/employee-added.png)
 
 ## License
 MIT License
