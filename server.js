@@ -4,25 +4,16 @@ var consoleTable = require("console.table");
 const { allowedNodeEnvironmentFlags } = require("process");
 require("dotenv").config();
 
-// create the connection information for the sql database
 var connection = mysql.createConnection({
     host: "localhost",
-
-    // Your port; if not 3306
     port: 3306,
-
-    // Your username
     user: "root",
-
-    // Your password
     password: process.env.DB_PWD,
     database: "employeeDB"
 });
 
-// connect to the mysql server and sql database
 connection.connect(function (err) {
     if (err) throw err;
-    // run the start function after the connection is made to prompt the user
     start();
 });
 
@@ -129,17 +120,14 @@ function start() {
 };
 
 function viewEmployees() {
-    //call the query to select the join that we created
     connection.query(`SELECT first_name as "First Name", last_name as "Last Name", title as "Role", salary as "Salary", department_name as "Department Name"
     FROM employee
     LEFT JOIN roles ON employee.role_id = roles.id
     LEFT JOIN department ON roles.department_id = department.id`, function (err, results) {
         if (err) throw err;
         console.table(results);
-        //THIS NEEDS TO BE AT THE END OF EVERY FUNCTION!!
         start();
     });
-    //the results objects will go into console.table and it will display in a table view
 };
 
 function viewEmployeesDept() {
@@ -169,7 +157,6 @@ ORDER BY department_name, title, first_name, last_name;`
             start();
         })
 };
-
 
 function addEmployee() {
     inquirer.prompt([
@@ -274,11 +261,14 @@ function addDept() {
                 {
                     department_name: answer.newDeptName
                 },
-                function (err) {
+                function (err, results) {
                     if (err) throw err;
+                    console.log(results.insertId);
                     console.log(`The ${answer.newDeptName} Department was created successfully!`);
+                    deptChoices.push({ name: answer.newDeptName, value: results.insertId });
                     start();
-                }
+                },
+
             )
         })
 }
@@ -291,28 +281,30 @@ function addRole() {
             message: "What's the name of the role you'd like to add?"
         },
         {
+            name: "newRoleSalary",
+            type: "input",
+            message: "What's the salary of this role?"
+        },
+        {
             name: "newRoleDept",
             type: "list",
             message: "What department will this role be in?",
             choices: deptChoices
         },
-        {
-            name: "newRoleSalary",
-            type: "input",
-            message: "What's the salary of this role?"
-        },
+
     ])
         .then(answer => {
             connection.query("INSERT INTO roles SET ?",
                 {
                     title: answer.newRoleName,
-                    department_id: answer.newRoleDept,
                     salary: answer.newRoleSalary,
+                    department_id: answer.newRoleDept,
 
                 },
-                function (err) {
+                function (err, results) {
                     if (err) throw err;
-                    console.log(`The ${answer.newDeptName} Department was created successfully!`);
+                    console.log(`The ${answer.newRoleName} Role was created successfully!`);
+                    empRoleChoices.push({ name: answer.newRoleName, value: results.insertId });
                     start();
                 }
             )
